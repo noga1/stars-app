@@ -133,6 +133,35 @@
   .row .inp { flex: 1 1 130px; width: auto; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .row select.inp { flex: 0 1 110px; }
+  .datebar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+  .datebig { text-align: center; flex: 1 1 200px; }
+  .dow { font-size: 1.6rem; font-weight: 800; color: var(--accent); line-height: 1.2; }
+  .dmy { font-size: 1.1rem; }
+  .badge { font-size: .8rem; background: var(--star); color: #3a2d00; border-radius: 6px; padding: 1px 8px; vertical-align: middle; }
+  .datepick { flex: 1 1 100%; display: flex; align-items: end; gap: 10px; }
+  .datepick .field { margin: 0; flex: 0 1 220px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .chip { font: inherit; min-height: 40px; padding: 4px 16px; border: 1.5px solid var(--accent); border-radius: 999px; background: #fff; color: var(--accent); cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  table.stars { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--line); }
+  .stars th { position: sticky; top: 0; z-index: 1; background: var(--accent-soft); padding: 10px 8px; text-align: center; font-size: .95rem; }
+  .stars th:first-child { text-align: start; }
+  .stars td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .stars td + td { text-align: center; }
+  .stars tr.grade td { background: #f3f0fb; font-weight: 700; color: var(--muted); padding: 6px 10px; text-align: start; }
+  .stname { font-weight: 700; }
+  .stsub { color: var(--muted); font-size: .85rem; font-weight: 400; }
+  .cell { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  input.star { width: 58px; height: 46px; padding: 0; text-align: center; font: inherit; font-size: 1.25rem; font-weight: 800; color: #1d1b2b; border: 2px solid #bdb4de; border-radius: 8px; }
+  input.star.draft { border: 2px dashed #e08a00; }
+  input.star:focus { outline: 3px solid #cfc5f7; border-color: var(--accent); }
+  .by { font-size: .75rem; color: var(--muted); min-height: 1.1em; line-height: 1.1; }
+  .statusline { margin: 4px 0 10px; }
+  .dirtyText { color: var(--muted); font-weight: 600; }
+  .dirtyText.pending { color: #b36b00; }
+  .savebar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 4px 0 10px; }
+  .onotes { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 8px; }
+  .onote { margin: 4px 0; }
   #toast {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     background: var(--ink); color: #fff; padding: 12px 20px; border-radius: 10px;
@@ -154,10 +183,10 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, serverTimestamp }
+  import { getFirestore, collection, addDoc, updateDoc, setDoc, getDoc, doc, onSnapshot, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  const APP_VERSION = "0.3.0";
+  const APP_VERSION = "0.4.0";
   const firebaseConfig = {
     apiKey: "AIzaSyBtvS1XsCzq5M8bwEMAp-zmO5-eCBuIDEo",
     authDomain: "school-stars-5efd8.firebaseapp.com",
@@ -187,19 +216,35 @@
     toastTimer = setTimeout(() => { t.className = ""; }, 3500);
   }
 
+  const pad = (n) => String(n).padStart(2, "0");
+  const toISO = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const todayISO = () => toISO(new Date());
+  const parseISO = (v) => { const [y, m, d] = v.split("-").map(Number); return new Date(y, m - 1, d); };
+  const addDays = (v, n) => { const d = parseISO(v); d.setDate(d.getDate() + n); return toISO(d); };
+  const dowFmt = new Intl.DateTimeFormat("he-IL", { weekday: "long" });
+  const dmyFmt = new Intl.DateTimeFormat("he-IL", { day: "numeric", month: "long", year: "numeric" });
+
   /* ---------- מצב ---------- */
   const S = {
     code: null, teachers: [], students: [], loaded: false, error: "",
-    teacherId: store.get(LS.teacher), tab: "home", editingId: null, pending: false
+    teacherId: store.get(LS.teacher), tab: "home", editingId: null, pending: false,
+    date: todayISO(), groupFilter: "all", dayKey: null, dayData: null, draft: null,
+    unsubDay: null, dTimer: null, dPending: null
   };
   let unsub = null, unsubStudents = null;
   const teachersCol = () => collection(db, "teams", S.code, "teachers");
   const teacherDoc = (id) => doc(db, "teams", S.code, "teachers", id);
   const studentsCol = () => collection(db, "teams", S.code, "students");
   const studentDoc = (id) => doc(db, "teams", S.code, "students", id);
+  const UNKNOWN = "לא ידוע";
   const GRADES = ["ז'", "ח'", "ט'", "י'", 'י"א'];
   const GROUPS = ["א'", "ב'"];
+  const GRADE_OPTIONS = [...GRADES, UNKNOWN];
+  const GROUP_OPTIONS = [...GROUPS, UNKNOWN];
   const gradeIdx = (g) => { const i = GRADES.indexOf(g); return i < 0 ? 99 : i; };
+  const gradeTitle = (g) => (!g || g === UNKNOWN ? "כיתה לא ידועה" : `כיתה ${g}`);
+  const groupTitle = (g) => (!g || g === UNKNOWN ? "קבוצה לא ידועה" : `קבוצה ${g}`);
+  const normGrade = (g) => (GRADES.includes(g) ? g : UNKNOWN);
   const isActive = (t) => t.active !== false;
   const currentTeacher = () => S.teachers.find((t) => t.id === S.teacherId && isActive(t));
 
@@ -213,17 +258,17 @@
         .sort((a, b) => gradeIdx(a.grade) - gradeIdx(b.grade)
           || String(a.group).localeCompare(String(b.group), "he")
           || String(a.name).localeCompare(String(b.name), "he"));
-      if (!S.loaded || typingNow()) { if (S.loaded) S.pending = true; return; }
-      render();
+      if (!S.loaded) return;
+      onDataChange();
     }, (err) => console.error(err));
     unsub = onSnapshot(teachersCol(), (snap) => {
       S.teachers = snap.docs
         .map((d) => ({ id: d.id, ...d.data() }))
         .sort((a, b) => String(a.name).localeCompare(String(b.name), "he"));
+      const first = !S.loaded;
       S.loaded = true;
       store.set(LS.code, code);
-      if (typingNow()) { S.pending = true; return; }
-      render();
+      if (first) render(); else onDataChange();
     }, (err) => {
       if (err.code === "permission-denied") {
         store.del(LS.code); S.code = null; S.error = "הקוד שגוי. נסי שוב.";
@@ -236,12 +281,23 @@
 
   function typingNow() {
     const a = document.activeElement;
-    return !!(a && a.tagName === "INPUT" && a.closest("#app"));
+    return !!(a && ["INPUT", "TEXTAREA", "SELECT"].includes(a.tagName) && a.closest("#app"));
+  }
+
+  function onDataChange() {
+    if (typingNow()) {
+      if (S.tab === "home" && S.dayData && S.draft) paintAll(); else S.pending = true;
+      return;
+    }
+    render();
   }
 
   function signOutDevice() {
     if (unsub) unsub();
     if (unsubStudents) unsubStudents();
+    flushDraft();
+    if (S.unsubDay) S.unsubDay();
+    S.dayKey = null; S.dayData = null; S.draft = null;
     store.del(LS.code); store.del(LS.teacher);
     S.code = null; S.loaded = false; S.teachers = []; S.students = []; S.teacherId = null; S.error = "";
     render();
@@ -271,7 +327,9 @@
       return;
     }
     if (!me) { app.innerHTML = pickerScreen(); return; }
-    app.innerHTML = tabContent();
+    if (S.tab === "home") ensureDay();
+    app.innerHTML = tabContent(me);
+    if (S.tab === "home" && S.dayData && S.draft) paintAll();
   }
 
   function codeScreen() {
@@ -353,8 +411,8 @@
     return `<form id="studentForm">
       <div class="field"><label for="sName">שם התלמידה</label><input class="inp" id="sName" autocomplete="off" required></div>
       <div class="two">
-        <div class="field"><label for="sGrade">כיתה</label><select class="inp" id="sGrade" required>${options(GRADES, "", "בחירה...")}</select></div>
-        <div class="field"><label for="sGroup">קבוצה</label><select class="inp" id="sGroup" required>${options(GROUPS, "", "בחירה...")}</select></div>
+        <div class="field"><label for="sGrade">כיתה</label><select class="inp" id="sGrade" required>${options(GRADE_OPTIONS, "", "בחירה...")}</select></div>
+        <div class="field"><label for="sGroup">קבוצה</label><select class="inp" id="sGroup" required>${options(GROUP_OPTIONS, "", "בחירה...")}</select></div>
       </div>
       <button class="btn" type="submit">הוספה</button>
     </form>`;
@@ -365,15 +423,15 @@
     if (S.editingId === s.id) {
       return `<div class="row">
         <input class="inp" id="editStName" value="${esc(s.name)}" aria-label="שם">
-        <select class="inp" id="editStGrade" aria-label="כיתה">${options(GRADES, s.grade)}</select>
-        <select class="inp" id="editStGroup" aria-label="קבוצה">${options(GROUPS, s.group)}</select>
+        <select class="inp" id="editStGrade" aria-label="כיתה">${options(GRADE_OPTIONS, s.grade)}</select>
+        <select class="inp" id="editStGroup" aria-label="קבוצה">${options(GROUP_OPTIONS, s.group)}</select>
         <div class="actions">
           <button class="btn small" data-action="save-student" data-id="${s.id}">שמירה</button>
           <button class="btn small secondary" data-action="cancel-edit">ביטול</button>
         </div></div>`;
     }
     return `<div class="row ${on ? "" : "off"}">
-      <span class="name">${esc(s.name)}</span><span class="sub">כיתה ${esc(s.grade)}, קבוצה ${esc(s.group)}</span>
+      <span class="name">${esc(s.name)}</span><span class="sub">${esc(gradeTitle(s.grade))}, ${esc(groupTitle(s.group))}</span>
       <div class="actions">
         <button class="btn small secondary" data-action="edit" data-id="${s.id}">עריכה</button>
         <button class="btn small secondary" data-action="toggle-student" data-id="${s.id}">${on ? "הפיכה ללא פעילה" : "הפעלה מחדש"}</button>
@@ -383,23 +441,247 @@
   function studentsScreen() {
     const active = S.students.filter(isActive);
     const inactive = S.students.filter((s) => !isActive(s));
-    const byGrade = GRADES.map((g) => [g, active.filter((s) => s.grade === g)]).filter(([, l]) => l.length);
+    const byGrade = GRADE_OPTIONS.map((g) => [g, active.filter((s) => normGrade(s.grade) === g)]).filter(([, l]) => l.length);
     return `<h2>ניהול תלמידות</h2>
       <div class="card"><h3 style="margin-top:0">הוספת תלמידה</h3>${studentForm()}</div>
       <div class="card">
         <p class="hint" style="margin-top:0">${active.length} תלמידות פעילות</p>
-        ${byGrade.map(([g, l]) => `<h3>כיתה ${esc(g)}</h3>${l.map(studentRow).join("")}`).join("")
+        ${byGrade.map(([g, l]) => `<h3>${esc(gradeTitle(g))}</h3>${l.map(studentRow).join("")}`).join("")
           || '<p class="center">עוד לא נוספו תלמידות.</p>'}
         ${inactive.length ? `<h3>לא פעילות</h3>${inactive.map(studentRow).join("")}` : ""}
       </div>
       <p class="hint">תלמידה שהפכה ללא פעילה לא תופיע בטופס היומי, אבל הכוכבים שצברה נשמרים.</p>`;
   }
 
-  function tabContent() {
+  function tabContent(me) {
+    if (S.tab === "home") return homeScreen(me);
     if (S.tab === "teachers") return teachersScreen();
     if (S.tab === "students") return studentsScreen();
     const names = { home: "דף הבית", dashboard: "הדשבורד" };
     return `<div class="card center"><h2>${names[S.tab]}</h2><p>המסך הזה ייבנה בשלב הבא.</p></div>`;
+  }
+
+  /* ---------- דף הבית: הטופס היומי ---------- */
+  const dayDoc = (date) => doc(db, "teams", S.code, "days", date);
+  const draftRef = (code, date, tid) => doc(db, "teams", code, "drafts", `${date}_${tid}`);
+  const teacherName = (id) => (S.teachers.find((t) => t.id === id) || {}).name || "";
+  const LESSONS = { l1: "שיעור ראשון", l2: "שיעור שני" };
+
+  function starColor(v) {
+    if (v == null) return "#e4e2ea";
+    const t = Math.min(Math.max(v, 0), 4) / 4;
+    const a = [255, 255, 255], b = [46, 204, 64];
+    return `rgb(${a.map((x, i) => Math.round(x + (b[i] - x) * t)).join(",")})`;
+  }
+
+  function savedCell(sid, l) {
+    const e = S.dayData && S.dayData.entries && S.dayData.entries[sid];
+    return { value: e && e[l] != null ? e[l] : null, by: (e && e[l + "By"]) || null };
+  }
+  function cellInfo(sid, l) {
+    const dr = S.draft && S.draft.entries[sid];
+    if (dr && l in dr) return { value: dr[l], by: S.teacherId, draft: true };
+    return { ...savedCell(sid, l), draft: false };
+  }
+  function savedNote() {
+    const n = S.dayData && S.dayData.notes && S.dayData.notes[S.teacherId];
+    return typeof n === "string" ? n : "";
+  }
+  function dirtyCount() {
+    if (!S.draft) return 0;
+    let n = 0;
+    for (const e of Object.values(S.draft.entries)) n += Object.keys(e).length;
+    if (S.draft.notes !== undefined && S.draft.notes !== savedNote()) n++;
+    return n;
+  }
+  function updateStatus() {
+    const n = dirtyCount();
+    document.querySelectorAll(".dirtyText").forEach((el) => {
+      el.textContent = n === 0 ? "הכל שמור" : n === 1 ? "יש שינוי אחד שלא נשמר" : `יש ${n} שינויים שלא נשמרו`;
+      el.classList.toggle("pending", n > 0);
+    });
+  }
+  function paint(inp, force) {
+    const info = cellInfo(inp.dataset.sid, inp.dataset.l);
+    if (force || document.activeElement !== inp) inp.value = info.value == null ? "" : String(info.value);
+    inp.style.background = starColor(info.value);
+    inp.classList.toggle("draft", info.draft);
+    const cap = inp.nextElementSibling;
+    if (cap) cap.textContent = info.value == null ? "" : teacherName(info.by);
+  }
+  function paintAll() {
+    document.querySelectorAll("#app input.star").forEach((i) => paint(i, false));
+    updateStatus();
+  }
+
+  function ensureDay() {
+    const key = S.date + "|" + S.teacherId;
+    if (S.dayKey === key) return;
+    flushDraft();
+    if (S.unsubDay) S.unsubDay();
+    S.dayKey = key; S.dayData = null; S.draft = null;
+    const date = S.date, tid = S.teacherId, code = S.code;
+    S.unsubDay = onSnapshot(dayDoc(date), (snap) => {
+      if (S.dayKey !== key) return;
+      const d = snap.exists() ? snap.data() : {};
+      if (!d.entries) d.entries = {};
+      S.dayData = d;
+      onDataChange();
+    }, (err) => { console.error(err); toast("טעינת נתוני היום נכשלה", true); });
+    getDoc(draftRef(code, date, tid)).then((snap) => {
+      if (S.dayKey !== key) return;
+      const d = snap.exists() ? snap.data() : {};
+      S.draft = { entries: d.entries || {} };
+      if (typeof d.notes === "string") S.draft.notes = d.notes;
+      onDataChange();
+    }).catch((err) => {
+      console.error(err);
+      if (S.dayKey !== key) return;
+      S.draft = { entries: {} };
+      onDataChange();
+    });
+  }
+
+  function scheduleDraftWrite() {
+    clearTimeout(S.dTimer);
+    S.dPending = { code: S.code, date: S.date, tid: S.teacherId, data: JSON.parse(JSON.stringify(S.draft)) };
+    S.dTimer = setTimeout(flushDraft, 700);
+  }
+  function flushDraft() {
+    clearTimeout(S.dTimer);
+    const p = S.dPending;
+    if (!p) return;
+    S.dPending = null;
+    const data = { entries: p.data.entries, updatedAt: serverTimestamp() };
+    if (p.data.notes !== undefined) data.notes = p.data.notes;
+    setDoc(draftRef(p.code, p.date, p.tid), data)
+      .catch((e) => { console.error(e); toast("שמירת הטיוטה נכשלה. בדקי את החיבור לאינטרנט.", true); });
+  }
+
+  function setCell(inp, val) {
+    const sid = inp.dataset.sid, l = inp.dataset.l;
+    const saved = savedCell(sid, l);
+    const hasDraft = S.draft.entries[sid] && l in S.draft.entries[sid];
+    if (!hasDraft && val !== saved.value && saved.value != null && saved.by && saved.by !== S.teacherId) {
+      if (!confirm(`הכוכבים האלה הוזנו על ידי ${teacherName(saved.by) || "מורה אחרת"}.\nלשנות אותם?`)) {
+        paint(inp, true);
+        return;
+      }
+    }
+    if (val === saved.value) {
+      if (S.draft.entries[sid]) {
+        delete S.draft.entries[sid][l];
+        if (!Object.keys(S.draft.entries[sid]).length) delete S.draft.entries[sid];
+      }
+    } else {
+      if (!S.draft.entries[sid]) S.draft.entries[sid] = {};
+      S.draft.entries[sid][l] = val;
+    }
+    paint(inp, true);
+    updateStatus();
+    scheduleDraftWrite();
+  }
+
+  async function saveDay() {
+    const me = currentTeacher();
+    if (!me || !S.draft || !S.dayData) return;
+    const key = S.dayKey, date = S.date, d = S.draft;
+    const entries = {};
+    let count = 0;
+    for (const [sid, e] of Object.entries(d.entries)) {
+      for (const [l, v] of Object.entries(e)) {
+        if (!entries[sid]) entries[sid] = {};
+        entries[sid][l] = v;
+        entries[sid][l + "By"] = v == null ? null : me.id;
+        count++;
+      }
+    }
+    const noteChanged = d.notes !== undefined && d.notes !== savedNote();
+    if (!count && !noteChanged) return toast("אין שינויים לשמירה");
+    const payload = { updatedAt: serverTimestamp(), entries };
+    if (d.notes !== undefined) payload.notes = { [me.id]: d.notes };
+    const btn = document.querySelector('[data-action="save-day"]');
+    if (btn) btn.disabled = true;
+    try {
+      await setDoc(dayDoc(date), payload, { merge: true });
+      if (S.dayKey === key) {
+        S.draft = { entries: {} };
+        clearTimeout(S.dTimer); S.dPending = null;
+        paintAll();
+      }
+      await setDoc(draftRef(S.code, date, me.id), { entries: {}, updatedAt: serverTimestamp() });
+      toast("נשמר בהצלחה");
+    } catch (e) {
+      console.error(e);
+      toast("השמירה נכשלה. הטיוטה נשמרה, נסי שוב.", true);
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  function homeStudents() {
+    const ent = (S.dayData && S.dayData.entries) || {};
+    const hasData = (s) => ent[s.id] && (ent[s.id].l1 != null || ent[s.id].l2 != null);
+    return S.students
+      .filter((s) => isActive(s) || hasData(s))
+      .filter((s) => S.groupFilter === "all" || s.group === S.groupFilter);
+  }
+
+  function cellHtml(s, l) {
+    return `<td><div class="cell"><input class="star" inputmode="numeric" maxlength="1" autocomplete="off"
+      data-sid="${s.id}" data-l="${l}" aria-label="${LESSONS[l]}, ${esc(s.name)}"><span class="by"></span></div></td>`;
+  }
+
+  function homeScreen(me) {
+    const date = S.date, today = todayISO(), d = parseISO(date);
+    const head = `<div class="card datebar">
+        <button class="btn small secondary" data-action="day-prev">יום קודם</button>
+        <div class="datebig">
+          <div class="dow">${esc(dowFmt.format(d))}${date === today ? ' <span class="badge">היום</span>' : ""}</div>
+          <div class="dmy">${esc(dmyFmt.format(d))}</div>
+        </div>
+        <button class="btn small secondary" data-action="day-next">יום הבא</button>
+        <div class="datepick">
+          <div class="field"><label for="datePick">בחירת תאריך</label><input class="inp" type="date" id="datePick" value="${date}"></div>
+          ${date !== today ? '<button class="btn small" data-action="day-today">חזרה להיום</button>' : ""}
+        </div>
+      </div>`;
+    if (!S.dayData || !S.draft) return head + `<p class="center">טוען את נתוני היום...</p>`;
+
+    const chips = ["all", ...GROUPS].map((g) =>
+      `<button class="chip" data-action="filter-group" data-g="${esc(g)}" aria-pressed="${S.groupFilter === g}">${g === "all" ? "כל התלמידות" : "קבוצה " + esc(g)}</button>`).join("");
+
+    const list = homeStudents();
+    let rows = "";
+    for (const g of GRADE_OPTIONS) {
+      const inG = list.filter((s) => normGrade(s.grade) === g);
+      if (!inG.length) continue;
+      rows += `<tr class="grade"><td colspan="3">${esc(gradeTitle(g))}</td></tr>`;
+      rows += inG.map((s) => `<tr><td>
+          <div class="stname">${esc(s.name)}${isActive(s) ? "" : ' <span class="stsub">(לא פעילה)</span>'}</div>
+          <div class="stsub">${esc(groupTitle(s.group))}</div></td>${cellHtml(s, "l1")}${cellHtml(s, "l2")}</tr>`).join("");
+    }
+    const table = list.length
+      ? `<table class="stars"><thead><tr><th>תלמידה</th><th>${LESSONS.l1}</th><th>${LESSONS.l2}</th></tr></thead><tbody>${rows}</tbody></table>`
+      : `<div class="card center">${S.students.length ? "אין תלמידות להצגה בקבוצה הזו." : "עוד לא נוספו תלמידות. אפשר להוסיף בלשונית \"תלמידות\"."}</div>`;
+
+    const others = Object.entries(S.dayData.notes || {})
+      .filter(([tid, txt]) => tid !== me.id && typeof txt === "string" && txt.trim())
+      .map(([tid, txt]) => `<p class="onote"><b>${esc(teacherName(tid) || "מורה")}:</b> ${esc(txt)}</p>`).join("");
+    const note = S.draft.notes !== undefined ? S.draft.notes : savedNote();
+
+    return `${head}
+      <div class="chips">${chips}</div>
+      <p class="hint" style="margin:0 0 6px">מספר כוכבים בין 0 ל-4. מתחת למספר מופיע שם המורה שהזינה אותו. מסגרת מקווקווה פירושה שהמספר עוד לא נשמר.</p>
+      <div class="statusline"><span class="dirtyText"></span></div>
+      ${table}
+      <div class="card" style="margin-top:18px">
+        <label for="noteInput">הערות</label>
+        <textarea class="inp" id="noteInput" rows="3" placeholder="אפשר לכתוב כאן הערות על היום">${esc(note)}</textarea>
+        ${others ? `<div class="onotes"><div class="hint">הערות של מורות אחרות</div>${others}</div>` : ""}
+      </div>
+      <div class="savebar"><button class="btn" data-action="save-day">שמירה</button><span class="dirtyText"></span></div>
+      <p class="hint">המספרים נשמרים אוטומטית כטיוטה. שאר המורות רואות אותם רק אחרי לחיצה על "שמירה".</p>`;
   }
 
   /* ---------- פעולות ---------- */
@@ -478,7 +760,41 @@
     else if (action === "save-student") saveStudent(id);
     else if (action === "toggle-student") toggleStudent(id);
     else if (action === "retry") connect(S.code);
+    else if (action === "day-prev") { S.date = addDays(S.date, -1); render(); }
+    else if (action === "day-next") { S.date = addDays(S.date, 1); render(); }
+    else if (action === "day-today") { S.date = todayISO(); render(); }
+    else if (action === "filter-group") { S.groupFilter = b.dataset.g; render(); }
+    else if (action === "save-day") saveDay();
   });
+
+  document.body.addEventListener("input", (e) => {
+    const t = e.target;
+    if (t.classList && t.classList.contains("star")) {
+      const raw = t.value.trim();
+      if (raw !== "" && !/^[0-4]$/.test(raw)) {
+        toast("אפשר להזין רק מספר בין 0 ל-4", true);
+        paint(t, true);
+        return;
+      }
+      setCell(t, raw === "" ? null : Number(raw));
+    } else if (t.id === "noteInput" && S.draft) {
+      if (t.value === savedNote()) delete S.draft.notes; else S.draft.notes = t.value;
+      updateStatus();
+      scheduleDraftWrite();
+    }
+  });
+
+  document.body.addEventListener("focusin", (e) => {
+    const t = e.target;
+    if (t.classList && t.classList.contains("star")) setTimeout(() => t.select(), 0);
+  });
+
+  document.body.addEventListener("change", (e) => {
+    if (e.target.id === "datePick" && e.target.value) { S.date = e.target.value; render(); }
+  });
+
+  document.addEventListener("visibilitychange", () => { if (document.hidden) flushDraft(); });
+  window.addEventListener("pagehide", flushDraft);
 
   document.body.addEventListener("submit", (e) => {
     e.preventDefault();
