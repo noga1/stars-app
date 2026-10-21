@@ -134,7 +134,8 @@
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .row select.inp { flex: 0 1 110px; }
   .datebar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
-  .datebig { text-align: center; flex: 1 1 200px; }
+  .datebig { text-align: center; flex: 1 1 120px; min-width: 0; }
+  .datebar > .btn { flex: 0 0 auto; padding: 4px 10px; }
   .dow { font-size: 1.6rem; font-weight: 800; color: var(--accent); line-height: 1.2; }
   .dmy { font-size: 1.1rem; }
   .badge { font-size: .8rem; background: var(--star); color: #3a2d00; border-radius: 6px; padding: 1px 8px; vertical-align: middle; }
@@ -162,6 +163,63 @@
   .savebar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 4px 0 10px; }
   .onotes { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 8px; }
   .onote { margin: 4px 0; }
+  .hdate { font-size: 1.05rem; color: var(--muted); }
+  .hol { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 6px; }
+  .hol:empty { display: none; }
+  .holchip { font-size: .85rem; padding: 2px 10px; border-radius: 999px; background: #f1e4ff; color: #52308a; }
+  .hol-major { background: #ffe9a8; color: #5c4200; font-weight: 700; }
+  .hol-chol { background: #d3efec; color: #0d5a54; }
+  .hol-eve, .hol-isru { background: #dbe8ff; color: #1f3f7a; }
+  .hol-fast { background: #e6e3ea; color: #3d3750; }
+  .hol-memorial { background: #3d3750; color: #fff; }
+  .hol-minor { background: #f1e4ff; color: #52308a; }
+  .hol-rc { background: #fff; color: var(--muted); border: 1px dashed #bdb4de; }
+  .cal { padding: 12px; }
+  .calhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+  .caltitle { text-align: center; font-weight: 700; }
+  .caltitle small { display: block; color: var(--muted); font-weight: 400; font-size: .85rem; }
+  .calgrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .calgrid .wd { text-align: center; font-size: .85rem; color: var(--muted); padding: 2px 0; }
+  .calgrid .wd.off { opacity: .55; }
+  .day { position: relative; font: inherit; min-height: 50px; padding: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.15; border: 1.5px solid transparent; border-radius: 8px; background: transparent; color: var(--ink); }
+  .day .g { font-weight: 700; }
+  .day .h { font-size: .72rem; color: var(--muted); }
+  .day.school { background: #e4dcfb; border-color: #bfb0f0; cursor: pointer; }
+  .day.school:hover { background: #d6caf8; }
+  .day.off { color: #9d98b3; cursor: not-allowed; }
+  .day.off .h { color: #b3aec6; }
+  .day.sel { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .day.sel .h { color: #e6dfff; }
+  .day.today { outline: 2px solid var(--star); outline-offset: 1px; }
+  .day:focus-visible { outline: 3px solid #cfc5f7; outline-offset: 2px; }
+  .day .dot { position: absolute; top: 5px; left: 5px; width: 7px; height: 7px; border-radius: 50%; background: #e08a00; }
+  .stars th.mine { background: #ffe9a8; }
+  .stars td.mine { background: #fffaf0; }
+  .mine-tag { font-size: .7rem; font-weight: 400; color: #6b5200; }
+  .tscroll { overflow-x: auto; background: #fff; border: 1px solid var(--line); }
+  table.dtable { width: 100%; border-collapse: collapse; font-size: .95rem; }
+  .dtable th { background: var(--accent-soft); padding: 8px 6px; text-align: center; white-space: nowrap; }
+  .dtable th:first-child { text-align: start; }
+  .dtable th:first-child, .dtable td:first-child { max-width: 125px; min-width: 95px; }
+  .dtable th:first-child .sortbtn { display: block; }
+  .dtable .sortbtn { padding: 2px 2px; font-size: .88rem; }
+  .dtable td, .dtable th { padding-inline: 5px; }
+  .dtable td { padding: 6px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .dtable td.num { text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .dtable td.tot { background: #f6f3ff; }
+  .dtable tr.zero td { color: #8f89a6; }
+  .dtable tfoot td { font-weight: 800; background: #f6f3ff; border-top: 2px solid #bfb0f0; }
+  .dtable tfoot td:not(:first-child) { text-align: center; }
+  .dtable th:first-child, .dtable td:first-child { position: sticky; right: 0; background: #fff; z-index: 1; }
+  .dtable th:first-child { background: var(--accent-soft); }
+  .dtable tfoot td:first-child { background: #f6f3ff; }
+  .dtable .by { font-weight: 400; }
+  .dim { color: #b3aec6; font-weight: 400; }
+  .nowrap { white-space: nowrap; }
+  .sortbtn { font: inherit; font-size: .9rem; font-weight: 700; background: none; border: 0; padding: 4px 4px; color: var(--ink); cursor: pointer; }
+  .sortbtn:hover { color: var(--accent); }
+  .statsline { margin: 4px 0 10px; }
+  .warn { color: var(--bad); font-size: .85rem; }
   #toast {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     background: var(--ink); color: #fff; padding: 12px 20px; border-radius: 10px;
@@ -183,10 +241,10 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, addDoc, updateDoc, setDoc, getDoc, doc, onSnapshot, serverTimestamp }
+  import { getFirestore, collection, addDoc, updateDoc, setDoc, getDoc, doc, onSnapshot, query, where, documentId, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  const APP_VERSION = "0.4.0";
+  const APP_VERSION = "0.5.0";
   const firebaseConfig = {
     apiKey: "AIzaSyBtvS1XsCzq5M8bwEMAp-zmO5-eCBuIDEo",
     authDomain: "school-stars-5efd8.firebaseapp.com",
@@ -224,11 +282,18 @@
   const dowFmt = new Intl.DateTimeFormat("he-IL", { weekday: "long" });
   const dmyFmt = new Intl.DateTimeFormat("he-IL", { day: "numeric", month: "long", year: "numeric" });
 
+  const isSchoolDay = (iso) => parseISO(iso).getDay() <= 4;
+  const stepSchoolDay = (iso, dir) => { let d = iso; do { d = addDays(d, dir); } while (!isSchoolDay(d)); return d; };
+  const defaultDate = () => { let t = todayISO(); while (!isSchoolDay(t)) t = addDays(t, -1); return t; };
+  const schoolYearOf = (iso) => (Number(iso.slice(5, 7)) >= 9 ? Number(iso.slice(0, 4)) : Number(iso.slice(0, 4)) - 1);
+
   /* ---------- מצב ---------- */
   const S = {
     code: null, teachers: [], students: [], loaded: false, error: "",
     teacherId: store.get(LS.teacher), tab: "home", editingId: null, pending: false,
-    date: todayISO(), groupFilter: "all", dayKey: null, dayData: null, draft: null,
+    date: defaultDate(), calOpen: false, calMonth: null, groupFilter: "all", dayKey: null, dayData: null, draft: null,
+    dash: { view: "summary", month: todayISO().slice(0, 7), year: schoolYearOf(todayISO()), student: "", teacher: "", subject: "", date: "",
+            sort: { key: "class", dir: 1 }, days: null, rangeKey: "", unsub: null },
     unsubDay: null, dTimer: null, dPending: null
   };
   let unsub = null, unsubStudents = null;
@@ -236,6 +301,7 @@
   const teacherDoc = (id) => doc(db, "teams", S.code, "teachers", id);
   const studentsCol = () => collection(db, "teams", S.code, "students");
   const studentDoc = (id) => doc(db, "teams", S.code, "students", id);
+  const SUBJECTS = ["עברית", "מתמטיקה", "אנגלית"];
   const UNKNOWN = "לא ידוע";
   const GRADES = ["ז'", "ח'", "ט'", "י'", 'י"א'];
   const GROUPS = ["א'", "ב'"];
@@ -298,6 +364,8 @@
     flushDraft();
     if (S.unsubDay) S.unsubDay();
     S.dayKey = null; S.dayData = null; S.draft = null;
+    if (S.dash.unsub) S.dash.unsub();
+    S.dash.unsub = null; S.dash.rangeKey = ""; S.dash.days = null;
     store.del(LS.code); store.del(LS.teacher);
     S.code = null; S.loaded = false; S.teachers = []; S.students = []; S.teacherId = null; S.error = "";
     render();
@@ -328,6 +396,7 @@
     }
     if (!me) { app.innerHTML = pickerScreen(); return; }
     if (S.tab === "home") ensureDay();
+    if (S.tab === "dashboard") ensureDash();
     app.innerHTML = tabContent(me);
     if (S.tab === "home" && S.dayData && S.draft) paintAll();
   }
@@ -359,17 +428,12 @@
       <button class="btn-link" data-action="sign-out-device">יציאה מהמכשיר (הזנת קוד חדש)</button>`;
   }
 
-  function subjectsList() {
-    const subjects = [...new Set(S.teachers.map((t) => t.subject).filter(Boolean))];
-    return `<datalist id="subjects">${subjects.map((s) => `<option value="${esc(s)}">`).join("")}</datalist>`;
-  }
-
   function teacherForm() {
     return `<form id="teacherForm">
       <div class="field"><label for="tName">שם המורה</label><input class="inp" id="tName" autocomplete="off" required></div>
-      <div class="field"><label for="tSubject">מקצוע לימוד</label><input class="inp" id="tSubject" list="subjects" autocomplete="off" required></div>
+      <div class="field"><label for="tSubject">מקצוע לימוד</label><select class="inp" id="tSubject" required>${options(SUBJECTS, "", "בחירה...")}</select></div>
       <button class="btn" type="submit">הוספה</button>
-    </form>${subjectsList()}`;
+    </form>`;
   }
 
   function teacherRow(t) {
@@ -377,14 +441,14 @@
     if (S.editingId === t.id) {
       return `<div class="row">
         <input class="inp" id="editName" value="${esc(t.name)}" aria-label="שם">
-        <input class="inp" id="editSubject" list="subjects" value="${esc(t.subject)}" aria-label="מקצוע">
+        <select class="inp" id="editSubject" aria-label="מקצוע">${options(SUBJECTS, SUBJECTS.includes(t.subject) ? t.subject : "", "בחירה...")}</select>
         <div class="actions">
           <button class="btn small" data-action="save-edit" data-id="${t.id}">שמירה</button>
           <button class="btn small secondary" data-action="cancel-edit">ביטול</button>
         </div></div>`;
     }
     return `<div class="row ${on ? "" : "off"}">
-      <span class="name">${esc(t.name)}</span><span class="sub">${esc(t.subject)}</span>
+      <span class="name">${esc(t.name)}</span><span class="sub">${esc(t.subject)}${SUBJECTS.includes(t.subject) ? "" : ' <span class="warn">(יש לבחור מקצוע מהרשימה)</span>'}</span>
       <div class="actions">
         <button class="btn small secondary" data-action="edit" data-id="${t.id}">עריכה</button>
         <button class="btn small secondary" data-action="toggle" data-id="${t.id}">${on ? "הפיכה ללא פעילה" : "הפעלה מחדש"}</button>
@@ -455,17 +519,162 @@
 
   function tabContent(me) {
     if (S.tab === "home") return homeScreen(me);
+    if (S.tab === "dashboard") return dashboardScreen();
     if (S.tab === "teachers") return teachersScreen();
     if (S.tab === "students") return studentsScreen();
     const names = { home: "דף הבית", dashboard: "הדשבורד" };
     return `<div class="card center"><h2>${names[S.tab]}</h2><p>המסך הזה ייבנה בשלב הבא.</p></div>`;
   }
 
+  /* ---------- לוח עברי וחגים ---------- */
+  const mod = (a, b) => ((a % b) + b) % b;
+  const HEB_EPOCH = -1373427;
+  const hLeap = (y) => mod(7 * y + 1, 19) < 7;
+  const hLastMonth = (y) => (hLeap(y) ? 13 : 12);
+  const hElapsed = (y) => {
+    const months = Math.floor((235 * y - 234) / 19);
+    const parts = 12084 + 13753 * months;
+    let day = 29 * months + Math.floor(parts / 25920);
+    if (mod(3 * (day + 1), 7) < 3) day += 1;
+    return day;
+  };
+  const hCorrection = (y) => {
+    const ny0 = hElapsed(y - 1), ny1 = hElapsed(y), ny2 = hElapsed(y + 1);
+    if (ny2 - ny1 === 356) return 2;
+    if (ny1 - ny0 === 382) return 1;
+    return 0;
+  };
+  const hNewYear = (y) => HEB_EPOCH + hElapsed(y) + hCorrection(y);
+  const hYearDays = (y) => hNewYear(y + 1) - hNewYear(y);
+  const hMonthDays = (y, m) => {
+    if ([2, 4, 6, 10, 13].includes(m)) return 29;
+    if (m === 12 && !hLeap(y)) return 29;
+    if (m === 8 && hYearDays(y) % 10 !== 5) return 29;
+    if (m === 9 && hYearDays(y) % 10 === 3) return 29;
+    return 30;
+  };
+  const hFixed = (y, m, d) => {
+    let rd = hNewYear(y) + d - 1;
+    if (m < 7) {
+      for (let k = 7; k <= hLastMonth(y); k++) rd += hMonthDays(y, k);
+      for (let k = 1; k < m; k++) rd += hMonthDays(y, k);
+    } else {
+      for (let k = 7; k < m; k++) rd += hMonthDays(y, k);
+    }
+    return rd;
+  };
+  function hFromFixed(rd) {
+    let y = Math.floor(((rd - HEB_EPOCH) * 98496) / 35975351) - 1;
+    while (hNewYear(y + 1) <= rd) y++;
+    let m = rd < hFixed(y, 1, 1) ? 7 : 1;
+    while (rd > hFixed(y, m, hMonthDays(y, m))) m++;
+    return { y, m, d: rd - hFixed(y, m, 1) + 1 };
+  }
+  const rdOf = (iso) => {
+    const [y, m, d] = iso.split("-").map(Number);
+    return Math.floor(Date.UTC(y, m - 1, d) / 86400000) + 719163;
+  };
+  const H_MONTHS = { 1: "ניסן", 2: "אייר", 3: "סיוון", 4: "תמוז", 5: "אב", 6: "אלול", 7: "תשרי", 8: "חשוון", 9: "כסלו", 10: "טבת", 11: "שבט" };
+  const hMonthName = (m, y) => (m === 12 ? (hLeap(y) ? "אדר א׳" : "אדר") : m === 13 ? "אדר ב׳" : H_MONTHS[m]);
+
+  function gematria(n) {
+    const ones = ["", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט"];
+    const tens = ["", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ"];
+    const hund = ["", "ק", "ר", "ש"];
+    let s = "";
+    while (n >= 400) { s += "ת"; n -= 400; }
+    s += hund[Math.floor(n / 100)]; n %= 100;
+    if (n === 15) s += "טו"; else if (n === 16) s += "טז";
+    else s += tens[Math.floor(n / 10)] + ones[n % 10];
+    return s.length === 1 ? s + "׳" : s.slice(0, -1) + "״" + s.slice(-1);
+  }
+  const hebrewDateText = (iso) => {
+    const h = hFromFixed(rdOf(iso));
+    return `${gematria(h.d)} ב${hMonthName(h.m, h.y)} ${gematria(h.y % 1000)}`;
+  };
+
+  // אירועים לפי לוח השנה בישראל. סוגים: major, chol, eve, isru, fast, memorial, minor, rc
+  function jewishEvents(iso) {
+    const rd = rdOf(iso);
+    const { y, m, d } = hFromFixed(rd);
+    const leap = hLeap(y);
+    const today = mod(rd, 7); // 0 = ראשון ... 6 = שבת
+    const dowOf = (mm, dd) => mod(hFixed(y, mm, dd), 7);
+    const ev = [];
+    const add = (name, kind) => ev.push({ name, kind });
+
+    if (m === 7) {
+      if (d === 1) add("ראש השנה (יום א׳)", "major");
+      if (d === 2) add("ראש השנה (יום ב׳)", "major");
+      if ((d === 3 && today !== 6) || (d === 4 && today === 0)) add("צום גדליה", "fast");
+      if (d === 9) add("ערב יום כיפור", "eve");
+      if (d === 10) add("יום כיפור", "major");
+      if (d === 14) add("ערב סוכות", "eve");
+      if (d === 15) add("סוכות", "major");
+      if (d >= 16 && d <= 20) add("חול המועד סוכות", "chol");
+      if (d === 21) add("הושענא רבה (חול המועד סוכות)", "chol");
+      if (d === 22) add("שמיני עצרת ושמחת תורה", "major");
+      if (d === 23) add("אסרו חג סוכות", "isru");
+    }
+    if (m === 6 && d === 29) add("ערב ראש השנה", "eve");
+    if (m === 9 && d >= 25) add(`חנוכה (יום ${d - 24})`, "minor");
+    if (m === 10 && d <= 3) {
+      const idx = d + hMonthDays(y, 9) - 24;
+      if (idx <= 8) add(`חנוכה (יום ${idx})`, "minor");
+    }
+    if (m === 10 && d === 10) add("צום עשרה בטבת", "fast");
+    if (m === 11 && d === 15) add("ט״ו בשבט", "minor");
+    const adarP = leap ? 13 : 12;
+    if (m === adarP) {
+      if ((d === 13 && today !== 6) || (d === 11 && today === 4 && dowOf(adarP, 13) === 6)) add("תענית אסתר", "fast");
+      if (d === 14) add("פורים", "major");
+      if (d === 15) add("שושן פורים", "minor");
+    }
+    if (leap && m === 12) {
+      if (d === 14) add("פורים קטן", "minor");
+      if (d === 15) add("שושן פורים קטן", "minor");
+    }
+    if (m === 1) {
+      if (d === 14) add("ערב פסח", "eve");
+      if ((d === 14 && today !== 6) || (d === 12 && today === 4 && dowOf(1, 14) === 6)) add("תענית בכורות", "fast");
+      if (d === 15) add("פסח", "major");
+      if (d >= 16 && d <= 20) add("חול המועד פסח", "chol");
+      if (d === 21) add("שביעי של פסח", "major");
+      if (d === 22) add("אסרו חג פסח", "isru");
+      const dw27 = dowOf(1, 27);
+      const shoah = dw27 === 5 ? 26 : dw27 === 0 ? 28 : 27;
+      if (d === shoah) add("יום הזיכרון לשואה ולגבורה", "memorial");
+    }
+    if (m === 2) {
+      const dw5 = dowOf(2, 5);
+      const indep = dw5 === 6 ? 3 : dw5 === 5 ? 4 : dw5 === 1 ? 6 : 5;
+      if (d === indep - 1) add("יום הזיכרון לחללי מערכות ישראל", "memorial");
+      if (d === indep) add("יום העצמאות", "major");
+      if (d === 18) add("ל״ג בעומר", "minor");
+      if (d === 28) add("יום ירושלים", "minor");
+    }
+    if (m === 3) {
+      if (d === 5) add("ערב שבועות", "eve");
+      if (d === 6) add("שבועות", "major");
+      if (d === 7) add("אסרו חג שבועות", "isru");
+    }
+    if (m === 4 && ((d === 17 && today !== 6) || (d === 18 && today === 0))) add("צום י״ז בתמוז", "fast");
+    if (m === 5) {
+      if ((d === 9 && today !== 6) || (d === 10 && today === 0)) add("צום תשעה באב", "fast");
+      if (d === 15) add("ט״ו באב", "minor");
+    }
+    if (d === 1 && m !== 7) add(`ראש חודש ${hMonthName(m, y)}`, "rc");
+    if (d === 30) {
+      const nm = m === 12 ? (leap ? 13 : 1) : m === 13 ? 1 : m === 6 ? 7 : m + 1;
+      add(`ראש חודש ${hMonthName(nm, y)}`, "rc");
+    }
+    return ev;
+  }
+
   /* ---------- דף הבית: הטופס היומי ---------- */
   const dayDoc = (date) => doc(db, "teams", S.code, "days", date);
   const draftRef = (code, date, tid) => doc(db, "teams", code, "drafts", `${date}_${tid}`);
   const teacherName = (id) => (S.teachers.find((t) => t.id === id) || {}).name || "";
-  const LESSONS = { l1: "שיעור ראשון", l2: "שיעור שני" };
 
   function starColor(v) {
     if (v == null) return "#e4e2ea";
@@ -474,14 +683,14 @@
     return `rgb(${a.map((x, i) => Math.round(x + (b[i] - x) * t)).join(",")})`;
   }
 
-  function savedCell(sid, l) {
+  function savedCell(sid, subj) {
     const e = S.dayData && S.dayData.entries && S.dayData.entries[sid];
-    return { value: e && e[l] != null ? e[l] : null, by: (e && e[l + "By"]) || null };
+    return { value: e && e[subj] != null ? e[subj] : null, by: (e && e[subj + "By"]) || null };
   }
-  function cellInfo(sid, l) {
+  function cellInfo(sid, subj) {
     const dr = S.draft && S.draft.entries[sid];
-    if (dr && l in dr) return { value: dr[l], by: S.teacherId, draft: true };
-    return { ...savedCell(sid, l), draft: false };
+    if (dr && subj in dr) return { value: dr[subj], by: S.teacherId, draft: true };
+    return { ...savedCell(sid, subj), draft: false };
   }
   function savedNote() {
     const n = S.dayData && S.dayData.notes && S.dayData.notes[S.teacherId];
@@ -514,6 +723,17 @@
     updateStatus();
   }
 
+  // טיוטות ישנות (מגרסאות קודמות) עלולות להכיל מפתחות שאינם מקצועות
+  function pruneEntries(entries) {
+    const out = {};
+    for (const [sid, e] of Object.entries(entries || {})) {
+      const k = {};
+      for (const [subj, v] of Object.entries(e)) if (SUBJECTS.includes(subj)) k[subj] = v;
+      if (Object.keys(k).length) out[sid] = k;
+    }
+    return out;
+  }
+
   function ensureDay() {
     const key = S.date + "|" + S.teacherId;
     if (S.dayKey === key) return;
@@ -531,7 +751,7 @@
     getDoc(draftRef(code, date, tid)).then((snap) => {
       if (S.dayKey !== key) return;
       const d = snap.exists() ? snap.data() : {};
-      S.draft = { entries: d.entries || {} };
+      S.draft = { entries: pruneEntries(d.entries) };
       if (typeof d.notes === "string") S.draft.notes = d.notes;
       onDataChange();
     }).catch((err) => {
@@ -559,9 +779,9 @@
   }
 
   function setCell(inp, val) {
-    const sid = inp.dataset.sid, l = inp.dataset.l;
-    const saved = savedCell(sid, l);
-    const hasDraft = S.draft.entries[sid] && l in S.draft.entries[sid];
+    const sid = inp.dataset.sid, subj = inp.dataset.l;
+    const saved = savedCell(sid, subj);
+    const hasDraft = S.draft.entries[sid] && subj in S.draft.entries[sid];
     if (!hasDraft && val !== saved.value && saved.value != null && saved.by && saved.by !== S.teacherId) {
       if (!confirm(`הכוכבים האלה הוזנו על ידי ${teacherName(saved.by) || "מורה אחרת"}.\nלשנות אותם?`)) {
         paint(inp, true);
@@ -570,12 +790,12 @@
     }
     if (val === saved.value) {
       if (S.draft.entries[sid]) {
-        delete S.draft.entries[sid][l];
+        delete S.draft.entries[sid][subj];
         if (!Object.keys(S.draft.entries[sid]).length) delete S.draft.entries[sid];
       }
     } else {
       if (!S.draft.entries[sid]) S.draft.entries[sid] = {};
-      S.draft.entries[sid][l] = val;
+      S.draft.entries[sid][subj] = val;
     }
     paint(inp, true);
     updateStatus();
@@ -589,10 +809,10 @@
     const entries = {};
     let count = 0;
     for (const [sid, e] of Object.entries(d.entries)) {
-      for (const [l, v] of Object.entries(e)) {
+      for (const [subj, v] of Object.entries(e)) {
         if (!entries[sid]) entries[sid] = {};
-        entries[sid][l] = v;
-        entries[sid][l + "By"] = v == null ? null : me.id;
+        entries[sid][subj] = v;
+        entries[sid][subj + "By"] = v == null ? null : me.id;
         count++;
       }
     }
@@ -621,31 +841,73 @@
 
   function homeStudents() {
     const ent = (S.dayData && S.dayData.entries) || {};
-    const hasData = (s) => ent[s.id] && (ent[s.id].l1 != null || ent[s.id].l2 != null);
+    const hasData = (s) => ent[s.id] && SUBJECTS.some((sj) => ent[s.id][sj] != null);
     return S.students
       .filter((s) => isActive(s) || hasData(s))
       .filter((s) => S.groupFilter === "all" || s.group === S.groupFilter);
   }
 
-  function cellHtml(s, l) {
-    return `<td><div class="cell"><input class="star" inputmode="numeric" maxlength="1" autocomplete="off"
-      data-sid="${s.id}" data-l="${l}" aria-label="${LESSONS[l]}, ${esc(s.name)}"><span class="by"></span></div></td>`;
+  function cellHtml(s, subj, mine) {
+    return `<td class="${mine ? "mine" : ""}"><div class="cell"><input class="star" inputmode="numeric" maxlength="1" autocomplete="off"
+      data-sid="${s.id}" data-l="${esc(subj)}" aria-label="${esc(subj)}, ${esc(s.name)}"><span class="by"></span></div></td>`;
+  }
+
+  const eventChips = (iso) => jewishEvents(iso)
+    .sort((a, b) => (a.kind === "rc") - (b.kind === "rc"))
+    .map((e) => `<span class="holchip hol-${e.kind}">${esc(e.name)}</span>`).join("");
+
+  function calendarHtml() {
+    const { y, m } = S.calMonth;
+    const first = new Date(y, m, 1);
+    const last = new Date(y, m + 1, 0);
+    const lead = first.getDay();
+    const hf = hFromFixed(rdOf(toISO(first))), hl = hFromFixed(rdOf(toISO(last)));
+    const hTitle = (hf.m === hl.m ? hMonthName(hf.m, hf.y) : `${hMonthName(hf.m, hf.y)} – ${hMonthName(hl.m, hl.y)}`) + " " + gematria(hl.y % 1000);
+    const today = todayISO();
+    let cells = "";
+    for (let i = 0; i < lead; i++) cells += "<span></span>";
+    for (let d = 1; d <= last.getDate(); d++) {
+      const dt = new Date(y, m, d), iso = toISO(dt);
+      const school = dt.getDay() <= 4;
+      const hd = hFromFixed(rdOf(iso));
+      const evs = jewishEvents(iso).filter((e) => e.kind !== "rc");
+      const names = evs.map((e) => e.name).join(", ");
+      const cls = ["day", school ? "school" : "off", iso === S.date ? "sel" : "", iso === today ? "today" : ""].join(" ");
+      const label = `${dowFmt.format(dt)}, ${d} ${new Intl.DateTimeFormat("he-IL", { month: "long" }).format(dt)}${names ? ", " + names : ""}`;
+      cells += `<button type="button" class="${cls}" ${school ? `data-action="pick-date" data-date="${iso}"` : "disabled"}
+        ${names ? `title="${esc(names)}"` : ""} aria-label="${esc(label)}" ${iso === S.date ? 'aria-pressed="true"' : ""}>
+        <span class="g">${d}</span><span class="h">${gematria(hd.d)}</span>${evs.length ? '<i class="dot"></i>' : ""}</button>`;
+    }
+    const wd = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"].map((w, i) => `<span class="wd ${i > 4 ? "off" : ""}">${w}</span>`).join("");
+    return `<div class="card cal">
+      <div class="calhead">
+        <button class="btn small secondary" data-action="cal-prev">חודש קודם</button>
+        <div class="caltitle">${esc(new Intl.DateTimeFormat("he-IL", { month: "long", year: "numeric" }).format(first))}<small>${esc(hTitle)}</small></div>
+        <button class="btn small secondary" data-action="cal-next">חודש הבא</button>
+      </div>
+      <div class="calgrid">${wd}${cells}</div>
+      <p class="hint" style="margin:8px 0 0">אפשר לבחור רק ימים א׳–ה׳ (בסגול). שישי ושבת אפורים. נקודה כתומה מסמנת חג או מועד.</p>
+    </div>`;
   }
 
   function homeScreen(me) {
     const date = S.date, today = todayISO(), d = parseISO(date);
+    const dflt = defaultDate();
     const head = `<div class="card datebar">
         <button class="btn small secondary" data-action="day-prev">יום קודם</button>
         <div class="datebig">
           <div class="dow">${esc(dowFmt.format(d))}${date === today ? ' <span class="badge">היום</span>' : ""}</div>
           <div class="dmy">${esc(dmyFmt.format(d))}</div>
+          <div class="hdate">${esc(hebrewDateText(date))}</div>
+          <div class="hol">${eventChips(date)}</div>
         </div>
         <button class="btn small secondary" data-action="day-next">יום הבא</button>
         <div class="datepick">
-          <div class="field"><label for="datePick">בחירת תאריך</label><input class="inp" type="date" id="datePick" value="${date}"></div>
-          ${date !== today ? '<button class="btn small" data-action="day-today">חזרה להיום</button>' : ""}
+          <button class="btn small secondary" data-action="cal-toggle" aria-expanded="${S.calOpen}">${S.calOpen ? "סגירת לוח השנה" : "בחירת תאריך בלוח שנה"}</button>
+          ${date !== dflt ? `<button class="btn small" data-action="day-today">${today === dflt ? "חזרה להיום" : "ליום הלימודים האחרון"}</button>` : ""}
         </div>
-      </div>`;
+      </div>
+      ${S.calOpen ? calendarHtml() : ""}`;
     if (!S.dayData || !S.draft) return head + `<p class="center">טוען את נתוני היום...</p>`;
 
     const chips = ["all", ...GROUPS].map((g) =>
@@ -656,13 +918,14 @@
     for (const g of GRADE_OPTIONS) {
       const inG = list.filter((s) => normGrade(s.grade) === g);
       if (!inG.length) continue;
-      rows += `<tr class="grade"><td colspan="3">${esc(gradeTitle(g))}</td></tr>`;
+      rows += `<tr class="grade"><td colspan="${SUBJECTS.length + 1}">${esc(gradeTitle(g))}</td></tr>`;
       rows += inG.map((s) => `<tr><td>
           <div class="stname">${esc(s.name)}${isActive(s) ? "" : ' <span class="stsub">(לא פעילה)</span>'}</div>
-          <div class="stsub">${esc(groupTitle(s.group))}</div></td>${cellHtml(s, "l1")}${cellHtml(s, "l2")}</tr>`).join("");
+          <div class="stsub">${esc(groupTitle(s.group))}</div></td>${SUBJECTS.map((sj) => cellHtml(s, sj, sj === me.subject)).join("")}</tr>`).join("");
     }
+    const ths = SUBJECTS.map((sj) => `<th class="${sj === me.subject ? "mine" : ""}">${esc(sj)}${sj === me.subject ? '<div class="mine-tag">העמודה שלך</div>' : ""}</th>`).join("");
     const table = list.length
-      ? `<table class="stars"><thead><tr><th>תלמידה</th><th>${LESSONS.l1}</th><th>${LESSONS.l2}</th></tr></thead><tbody>${rows}</tbody></table>`
+      ? `<table class="stars"><thead><tr><th>תלמידה</th>${ths}</tr></thead><tbody>${rows}</tbody></table>`
       : `<div class="card center">${S.students.length ? "אין תלמידות להצגה בקבוצה הזו." : "עוד לא נוספו תלמידות. אפשר להוסיף בלשונית \"תלמידות\"."}</div>`;
 
     const others = Object.entries(S.dayData.notes || {})
@@ -684,10 +947,198 @@
       <p class="hint">המספרים נשמרים אוטומטית כטיוטה. שאר המורות רואות אותם רק אחרי לחיצה על "שמירה".</p>`;
   }
 
+  /* ---------- דשבורד ---------- */
+  const MONTH_SHORT = new Intl.DateTimeFormat("he-IL", { month: "short" });
+  const MONTH_LONG = new Intl.DateTimeFormat("he-IL", { month: "long", year: "numeric" });
+  const DOW_SHORT = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"];
+  const dateLabel = (iso) => { const d = parseISO(iso); return `יום ${DOW_SHORT[d.getDay()]} ${d.getDate()}.${d.getMonth() + 1}`; };
+  const studentById = (id) => S.students.find((s) => s.id === id);
+  const studentSub = (s) => `${gradeTitle(s.grade)}, ${groupTitle(s.group)}`;
+  const classKey = (s) => `${String(gradeIdx(s.grade)).padStart(2, "0")}|${s.group}|${s.name}`;
+
+  function dashRange() {
+    const D = S.dash;
+    if (D.view === "year") return [`${D.year}-09-01`, `${D.year + 1}-09-01`];
+    const [y, m] = D.month.split("-").map(Number);
+    const next = m === 12 ? `${y + 1}-01` : `${y}-${pad(m + 1)}`;
+    return [`${D.month}-01`, `${next}-01`];
+  }
+
+  function ensureDash() {
+    const [a, b] = dashRange();
+    const key = `${S.code}|${a}|${b}`;
+    if (S.dash.rangeKey === key) return;
+    if (S.dash.unsub) S.dash.unsub();
+    S.dash.rangeKey = key; S.dash.days = null;
+    const q = query(collection(db, "teams", S.code, "days"), where(documentId(), ">=", a), where(documentId(), "<", b));
+    S.dash.unsub = onSnapshot(q, (snap) => {
+      if (S.dash.rangeKey !== key) return;
+      const days = {};
+      snap.docs.forEach((d) => { days[d.id] = d.data(); });
+      S.dash.days = days;
+      if (S.tab === "dashboard") onDataChange();
+    }, (err) => { console.error(err); toast("טעינת הדשבורד נכשלה", true); });
+  }
+
+  function dashRecords() {
+    const rec = [];
+    for (const [date, day] of Object.entries(S.dash.days || {})) {
+      for (const [sid, e] of Object.entries(day.entries || {})) {
+        for (const subject of SUBJECTS) {
+          if (e[subject] == null) continue;
+          rec.push({ date, sid, subject, value: e[subject], by: e[subject + "By"] || null });
+        }
+      }
+    }
+    return rec;
+  }
+
+  function dashFiltered() {
+    const D = S.dash;
+    return dashRecords().filter((r) =>
+      (!D.student || r.sid === D.student) &&
+      (!D.teacher || r.by === D.teacher) &&
+      (!D.subject || r.subject === D.subject) &&
+      (D.view === "year" || !D.date || r.date === D.date));
+  }
+
+  const cmp = (a, b) => (typeof a === "number" && typeof b === "number" ? a - b : String(a).localeCompare(String(b), "he"));
+  function sortRows(rows, getters) {
+    const { key, dir } = S.dash.sort;
+    const g = getters[key] || getters.name;
+    return rows.slice().sort((x, y) => dir * cmp(g(x), g(y)) || cmp(getters.name(x), getters.name(y)));
+  }
+  const sortBtn = (key, label) => {
+    const on = S.dash.sort.key === key;
+    return `<button type="button" class="sortbtn" data-action="dash-sort" data-key="${esc(key)}">${esc(label)}${on ? (S.dash.sort.dir > 0 ? " ▲" : " ▼") : ""}</button>`;
+  };
+  const ariaSort = (key) => (S.dash.sort.key === key ? (S.dash.sort.dir > 0 ? "ascending" : "descending") : "none");
+  const nameTh = (extra = "") => `<th aria-sort="${ariaSort("name")}">${sortBtn("name", "תלמידה")} ${sortBtn("class", "(כיתה)")}${extra}</th>`;
+  const nameTd = (s) => `<td><div class="stname">${esc(s.name)}</div><div class="stsub">${esc(studentSub(s))}</div></td>`;
+  const noData = `<div class="card center">אין נתונים להצגה לפי הסינון הנוכחי.</div>`;
+
+  function summaryHtml(recs) {
+    const D = S.dash, map = new Map();
+    for (const s of S.students) if (!D.student || s.id === D.student) map.set(s.id, { s, by: {}, cnt: {}, total: 0, n: 0 });
+    for (const r of recs) {
+      const row = map.get(r.sid);
+      if (!row) continue;
+      row.by[r.subject] = (row.by[r.subject] || 0) + r.value;
+      row.cnt[r.subject] = (row.cnt[r.subject] || 0) + 1;
+      row.total += r.value; row.n++;
+    }
+    const getters = { name: (r) => r.s.name, class: (r) => classKey(r.s), total: (r) => r.total };
+    SUBJECTS.forEach((sj) => { getters[sj] = (r) => r.by[sj] || 0; });
+    const rows = sortRows([...map.values()].filter((r) => isActive(r.s) || r.n > 0), getters);
+    if (!rows.length) return noData;
+    const sums = Object.fromEntries(SUBJECTS.map((sj) => [sj, rows.reduce((a, r) => a + (r.by[sj] || 0), 0)]));
+    const all = rows.reduce((a, r) => a + r.total, 0);
+    return `<div class="tscroll"><table class="dtable">
+      <thead><tr>${nameTh()}${SUBJECTS.map((sj) => `<th aria-sort="${ariaSort(sj)}">${sortBtn(sj, sj)}</th>`).join("")}<th aria-sort="${ariaSort("total")}">${sortBtn("total", "סה״כ")}</th></tr></thead>
+      <tbody>${rows.map((r) => `<tr class="${r.n ? "" : "zero"}">${nameTd(r.s)}${SUBJECTS.map((sj) => `<td class="num">${r.cnt[sj] ? r.by[sj] : '<span class="dim">–</span>'}</td>`).join("")}<td class="num tot">${r.total}</td></tr>`).join("")}</tbody>
+      <tfoot><tr><td>סה״כ</td>${SUBJECTS.map((sj) => `<td class="num">${sums[sj]}</td>`).join("")}<td class="num tot">${all}</td></tr></tfoot>
+    </table></div>`;
+  }
+
+  function detailHtml(recs) {
+    const map = new Map();
+    for (const r of recs) {
+      const s = studentById(r.sid);
+      if (!s) continue;
+      const k = r.date + "|" + r.sid;
+      if (!map.has(k)) map.set(k, { date: r.date, s, cells: {}, total: 0 });
+      const row = map.get(k);
+      row.cells[r.subject] = { v: r.value, by: r.by };
+      row.total += r.value;
+    }
+    const getters = { name: (r) => r.s.name, class: (r) => classKey(r.s), total: (r) => r.total, date: (r) => r.date };
+    SUBJECTS.forEach((sj) => { getters[sj] = (r) => (r.cells[sj] ? r.cells[sj].v : -1); });
+    const rows = sortRows([...map.values()], getters);
+    if (!rows.length) return noData;
+    return `<div class="tscroll"><table class="dtable">
+      <thead><tr><th aria-sort="${ariaSort("date")}">${sortBtn("date", "תאריך")}</th>${nameTh()}${SUBJECTS.map((sj) => `<th aria-sort="${ariaSort(sj)}">${sortBtn(sj, sj)}</th>`).join("")}<th aria-sort="${ariaSort("total")}">${sortBtn("total", "סה״כ")}</th></tr></thead>
+      <tbody>${rows.map((r) => `<tr><td class="nowrap">${esc(dateLabel(r.date))}</td>${nameTd(r.s)}${SUBJECTS.map((sj) => {
+        const c = r.cells[sj];
+        return `<td class="num">${c ? `${c.v}<div class="by">${esc(teacherName(c.by))}</div>` : '<span class="dim">–</span>'}</td>`;
+      }).join("")}<td class="num tot">${r.total}</td></tr>`).join("")}</tbody>
+    </table></div>`;
+  }
+
+  function yearHtml(recs) {
+    const D = S.dash;
+    const months = Array.from({ length: 12 }, (_, i) => {
+      const m = 9 + i;
+      return `${m > 12 ? D.year + 1 : D.year}-${pad(m > 12 ? m - 12 : m)}`;
+    });
+    const map = new Map();
+    for (const s of S.students) if (!D.student || s.id === D.student) map.set(s.id, { s, by: {}, total: 0, n: 0 });
+    for (const r of recs) {
+      const row = map.get(r.sid);
+      if (!row) continue;
+      const mk = r.date.slice(0, 7);
+      row.by[mk] = (row.by[mk] || 0) + r.value;
+      row.total += r.value; row.n++;
+    }
+    const getters = { name: (r) => r.s.name, class: (r) => classKey(r.s), total: (r) => r.total };
+    months.forEach((mk) => { getters["m:" + mk] = (r) => r.by[mk] || 0; });
+    const rows = sortRows([...map.values()].filter((r) => isActive(r.s) || r.n > 0), getters);
+    if (!rows.length) return noData;
+    const sums = Object.fromEntries(months.map((mk) => [mk, rows.reduce((a, r) => a + (r.by[mk] || 0), 0)]));
+    return `<div class="tscroll"><table class="dtable year">
+      <thead><tr>${nameTh()}${months.map((mk) => `<th aria-sort="${ariaSort("m:" + mk)}">${sortBtn("m:" + mk, MONTH_SHORT.format(parseISO(mk + "-01")))}</th>`).join("")}<th aria-sort="${ariaSort("total")}">${sortBtn("total", "סה״כ")}</th></tr></thead>
+      <tbody>${rows.map((r) => `<tr class="${r.n ? "" : "zero"}">${nameTd(r.s)}${months.map((mk) => `<td class="num">${r.by[mk] != null ? r.by[mk] : '<span class="dim">–</span>'}</td>`).join("")}<td class="num tot">${r.total}</td></tr>`).join("")}</tbody>
+      <tfoot><tr><td>סה״כ</td>${months.map((mk) => `<td class="num">${sums[mk]}</td>`).join("")}<td class="num tot">${rows.reduce((a, r) => a + r.total, 0)}</td></tr></tfoot>
+    </table></div>`;
+  }
+
+  function dashboardScreen() {
+    const D = S.dash;
+    const items = (arr, sel) => arr.map(([v, l]) => `<option value="${esc(v)}" ${v === sel ? "selected" : ""}>${esc(l)}</option>`).join("");
+    const field = (name, label, html) => `<div class="field"><label for="d_${name}">${label}</label><select class="inp" id="d_${name}" data-dash="${name}">${html}</select></div>`;
+
+    const now = new Date();
+    const monthItems = Array.from({ length: 18 }, (_, i) => {
+      const dt = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      return [`${dt.getFullYear()}-${pad(dt.getMonth() + 1)}`, MONTH_LONG.format(dt)];
+    });
+    const cur = schoolYearOf(todayISO());
+    const yearItems = [cur, cur - 1, cur - 2].map((y) => [String(y), `${y}–${y + 1}`]);
+    const dates = Object.entries(D.days || {})
+      .filter(([, day]) => day.entries && Object.keys(day.entries).length)
+      .map(([k]) => k).sort();
+
+    const periodField = D.view === "year"
+      ? field("year", "שנת לימודים", items(yearItems, String(D.year)))
+      : field("month", "חודש", items(monthItems, D.month));
+    const dateField = D.view === "year" ? "" : field("date", "תאריך",
+      items([["", "כל ימי החודש"], ...dates.map((k) => [k, dateLabel(k)])], D.date));
+
+    const views = [["summary", "סיכום חודשי"], ["detail", "פירוט יומי"], ["year", "לפי חודשים"]];
+    const head = `<h2>דשבורד</h2>
+      <div class="chips">${views.map(([k, l]) => `<button class="chip" data-action="dash-view" data-view="${k}" aria-pressed="${D.view === k}">${l}</button>`).join("")}</div>
+      <div class="card">
+        <div class="two">
+          ${periodField}
+          ${field("student", "תלמידה", items([["", "כל התלמידות"], ...S.students.map((s) => [s.id, `${s.name} (${gradeTitle(s.grade)})`])], D.student))}
+          ${field("teacher", "מורה", items([["", "כל המורות"], ...S.teachers.map((t) => [t.id, t.name])], D.teacher))}
+          ${field("subject", "מקצוע", items([["", "כל המקצועות"], ...SUBJECTS.map((s) => [s, s])], D.subject))}
+          ${dateField}
+        </div>
+        <button class="btn-link" data-action="dash-reset">ניקוי הסינון</button>
+      </div>`;
+    if (!D.days) return head + `<p class="center">טוען נתונים...</p>`;
+
+    const recs = dashFiltered();
+    const total = recs.reduce((a, r) => a + r.value, 0);
+    const stats = `<p class="hint statsline"><b>${total}</b> כוכבים · <b>${new Set(recs.map((r) => r.sid)).size}</b> תלמידות · <b>${new Set(recs.map((r) => r.date)).size}</b> ימים</p>`;
+    const body = D.view === "summary" ? summaryHtml(recs) : D.view === "detail" ? detailHtml(recs) : yearHtml(recs);
+    return head + stats + body;
+  }
+
   /* ---------- פעולות ---------- */
   async function addTeacher(name, subject) {
     name = name.trim(); subject = subject.trim();
-    if (!name || !subject) return toast("יש למלא שם ומקצוע", true);
+    if (!name || !SUBJECTS.includes(subject)) return toast("יש למלא שם ולבחור מקצוע מהרשימה", true);
     if (S.teachers.some((t) => t.name === name)) return toast("כבר קיימת מורה בשם הזה", true);
     try {
       await addDoc(teachersCol(), { name, subject, active: true, createdAt: serverTimestamp() });
@@ -698,7 +1149,7 @@
   async function saveEdit(id) {
     const name = $("#editName").value.trim();
     const subject = $("#editSubject").value.trim();
-    if (!name || !subject) return toast("יש למלא שם ומקצוע", true);
+    if (!name || !SUBJECTS.includes(subject)) return toast("יש למלא שם ולבחור מקצוע מהרשימה", true);
     if (S.teachers.some((t) => t.id !== id && t.name === name)) return toast("כבר קיימת מורה בשם הזה", true);
     try {
       await updateDoc(teacherDoc(id), { name, subject });
@@ -760,11 +1211,34 @@
     else if (action === "save-student") saveStudent(id);
     else if (action === "toggle-student") toggleStudent(id);
     else if (action === "retry") connect(S.code);
-    else if (action === "day-prev") { S.date = addDays(S.date, -1); render(); }
-    else if (action === "day-next") { S.date = addDays(S.date, 1); render(); }
-    else if (action === "day-today") { S.date = todayISO(); render(); }
+    else if (action === "day-prev") { S.date = stepSchoolDay(S.date, -1); render(); }
+    else if (action === "day-next") { S.date = stepSchoolDay(S.date, 1); render(); }
+    else if (action === "day-today") { S.date = defaultDate(); render(); }
     else if (action === "filter-group") { S.groupFilter = b.dataset.g; render(); }
     else if (action === "save-day") saveDay();
+    else if (action === "cal-toggle") {
+      S.calOpen = !S.calOpen;
+      if (S.calOpen) { const d = parseISO(S.date); S.calMonth = { y: d.getFullYear(), m: d.getMonth() }; }
+      render();
+    }
+    else if (action === "cal-prev" || action === "cal-next") {
+      const d = new Date(S.calMonth.y, S.calMonth.m + (action === "cal-next" ? 1 : -1), 1);
+      S.calMonth = { y: d.getFullYear(), m: d.getMonth() };
+      render();
+    }
+    else if (action === "pick-date") { S.date = b.dataset.date; S.calOpen = false; render(); }
+    else if (action === "dash-view") {
+      S.dash.view = b.dataset.view; S.dash.date = "";
+      S.dash.sort = { key: b.dataset.view === "detail" ? "date" : "class", dir: 1 };
+      render();
+    }
+    else if (action === "dash-sort") {
+      const k = b.dataset.key, cur = S.dash.sort;
+      const textual = k === "name" || k === "class" || k === "date";
+      S.dash.sort = cur.key === k ? { key: k, dir: -cur.dir } : { key: k, dir: textual ? 1 : -1 };
+      render();
+    }
+    else if (action === "dash-reset") { Object.assign(S.dash, { student: "", teacher: "", subject: "", date: "" }); render(); }
   });
 
   document.body.addEventListener("input", (e) => {
@@ -790,7 +1264,15 @@
   });
 
   document.body.addEventListener("change", (e) => {
-    if (e.target.id === "datePick" && e.target.value) { S.date = e.target.value; render(); }
+    const n = e.target.dataset && e.target.dataset.dash;
+    if (!n) return;
+    S.dash[n] = n === "year" ? Number(e.target.value) : e.target.value;
+    if (n === "month" || n === "year") S.dash.date = "";
+    render();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && S.calOpen) { S.calOpen = false; render(); }
   });
 
   document.addEventListener("visibilitychange", () => { if (document.hidden) flushDraft(); });
